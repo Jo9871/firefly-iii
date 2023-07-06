@@ -19,47 +19,45 @@ services:
     env_file: .env
     ports:
       - "80:8080"
-    depends_on:
-      - db
 
-  db:
-    image: mariadb
-    hostname: db
-    container_name: firefly_iii_db
-    networks:
-      - firefly_iii
-    restart: always
-    env_file: .db.env
-    volumes:
-      - firefly_iii_db:/var/lib/mysql
+  # db:
+  #   image: mariadb
+  #   hostname: db
+  #   container_name: firefly_iii_db
+  #   networks:
+  #     - firefly_iii
+  #   restart: always
+  #   env_file: .db.env
+  #   volumes:
+  #     - firefly_iii_db:/var/lib/mysql
 
-  importer:
-    image: fireflyiii/data-importer:latest
-    hostname: importer
-    restart: always
-    container_name: firefly_iii_importer
-    networks:
-      - firefly_iii
-    ports:
-      - "81:8080"
-    depends_on:
-      - app
-    env_file: .importer.env
+  # importer:
+  #   image: fireflyiii/data-importer:latest
+  #   hostname: importer
+  #   restart: always
+  #   container_name: firefly_iii_importer
+  #   networks:
+  #     - firefly_iii
+  #   ports:
+  #     - "81:8080"
+  #   depends_on:
+  #     - app
+  #   env_file: .importer.env
 
-  cron:
-    #
-    # To make this work, set STATIC_CRON_TOKEN in your .env file or as an environment variable and replace REPLACEME below
-    # The STATIC_CRON_TOKEN must be *exactly* 32 characters long
-    #
-    image: alpine
-    container_name: firefly_iii_cron
-    restart: always
-    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/REPLACEME\" | crontab - && crond -f -L /dev/stdout"
-    networks:
-      - firefly_iii
-volumes:
-  firefly_iii_upload:
-  firefly_iii_db:
+#   cron:
+#     #
+#     # To make this work, set STATIC_CRON_TOKEN in your .env file or as an environment variable and replace REPLACEME below
+#     # The STATIC_CRON_TOKEN must be *exactly* 32 characters long
+#     #
+#     image: alpine
+#     container_name: firefly_iii_cron
+#     restart: always
+#     command: sh -c "echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/REPLACEME\" | crontab - && crond -f -L /dev/stdout"
+#     networks:
+#       - firefly_iii
+# volumes:
+#   firefly_iii_upload:
+#   firefly_iii_db:
 
 networks:
   firefly_iii:
